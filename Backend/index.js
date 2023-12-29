@@ -15,6 +15,7 @@ app.use("/", notes);
 const PORT = process.env.port;
 
 app.listen(PORT, async () => {
+    console.log(PORT)
   try {
     await connection;
     console.log("connected");
