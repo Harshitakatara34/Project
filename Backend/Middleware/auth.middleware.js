@@ -4,7 +4,7 @@ const auth = (req, res, next) => {
   const token = req.headers.authorization;
   console.log(req.headers);
   console.log(token);
-  
+
   if (token) {
     try {
       const decode = jwt.verify(token, "harshi");
@@ -27,5 +27,5 @@ const auth = (req, res, next) => {
 };
 
 module.exports = {
-  auth
+  auth,
 };
