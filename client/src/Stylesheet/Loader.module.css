@@ -1,0 +1,30 @@
+.loader {
+    display: flex;
+    height: 80vh;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.bubble {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-image: linear-gradient(to right, seagreen, darkseagreen);
+    margin: 0 5px;
+    animation: bubbleAnimation 1.5s ease-in-out infinite;
+}
+
+@keyframes bubbleAnimation {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(2);
+        opacity: 0.5;
+    }
+}
