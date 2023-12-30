@@ -1,10 +1,11 @@
-// Notes.js
 import React, { useEffect, useState } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, Col, Row } from "react-bootstrap";
 import axios from "axios";
 import Loader from "../Components/Loader";
 import ViewNote from "../Components/ViewNote";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+
 const Notes = () => {
   const colors = [
     "seagreen",
@@ -19,6 +20,7 @@ const Notes = () => {
 
   const getRandomColor = () =>
     colors[Math.floor(Math.random() * colors.length)];
+    const navigate=useNavigate();
   const [notes, setNotes] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [allNotes, setAllNotes] = useState([]);
@@ -26,6 +28,7 @@ const Notes = () => {
   const [selectedNote, setSelectedNote] = useState(null);
   const token = localStorage.getItem("token");
   const [viewnote, setviewnote] = useState(false);
+
   const handleClose = () => {
     setShowModal(false);
     setSelectedNote(null); // Reset selected note after closing the modal
@@ -146,106 +149,69 @@ const Notes = () => {
     setAllNotes(note);
   };
 
-  const handleLogout = () => {};
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    
+    navigate('/login');
+  };
   const handleCancel = () => {
     setviewnote(false);
   };
+
   return (
     <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(to right, skyblue, seagreen)",
-      }}
+      className="container-fluid"
+      style={{ background: "linear-gradient(to right, skyblue, seagreen)",minHeight: "100vh" }}
     >
-    <div style={{marginLeft:"30px",display:"flex",justifyContent:"space-between",width: "90%",height: "100px"}}>
+      <Row className=" mb-4">
+        <Col xs={12}>
+          <h1 className="text-white">Notes</h1>
+          <div className="d-flex justify-content-between align-items-center">
+            <Button variant="primary" onClick={handleShow}>
+              Create Note
+            </Button>
+            <Button variant="primary" onClick={handleLogout}>
+              Log out
+            </Button>
+          </div>
+        </Col>
+      </Row>
 
-    <h1 style={{color:"white",marginTop:"20px"}}>Notes</h1>
-    <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          height: "100px",
-          width: "80%",
-          margin: "auto",
-          marginLeft:"80%"
-        }}
-      >
-
-        <Button variant="primary" onClick={handleShow}>
-          Create Note
-        </Button>
-        <Button variant="primary" onClick={handleLogout}>
-          Log out
-        </Button>
-    </div>
-      
-      </div>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-          gap: "150px",
-          width: "90%",
-          margin: "auto",
-        }}
-      >
+      <Row>
         {notes && notes.length > 0 ? (
           notes.map((note, index) => (
-            <div
-              key={index}
-              style={{
-                backgroundColor: getRandomColor(),
-                padding: "10px",
-                borderRadius: "5px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                marginLeft: "10px",
-                marginRight: "10px",
-                cursor: "pointer",
-                height: "200px",
-                width: "300px",
-              }}
-            >
-              <h2 style={{ marginTop: "30px" }}>{note.title}</h2>
+            <Col key={index} md={2} sm={6} xs={12} className="mb-3" >
               <div
+                className="card"
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  width: "80%",
-                  marginTop: "40px",
+                  backgroundColor: getRandomColor(),
+                  borderRadius: "5px",
+                  cursor: "pointer",
                 }}
               >
-                <Button variant="danger" onClick={() => handleDeleteNote(note)}>
-                  Delete
-                </Button>
-                <Button variant="primary" onClick={() => handleNoteClick(note)}>
-                  Edit
-                </Button>
-                <Button variant="success" onClick={() => handleViewNote(note)}>
-                  View
-                </Button>
+                <div className="card-body">
+                  <h2>{note.title}</h2>
+                  <div className="d-flex justify-content-between mt-2">
+                    <Button variant="danger" onClick={() => handleDeleteNote(note)}>
+                      Delete
+                    </Button>
+                    <Button variant="primary" onClick={() => handleNoteClick(note)}>
+                      Edit
+                    </Button>
+                    <Button variant="success" onClick={() => handleViewNote(note)}>
+                      View
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </div>
+            </Col>
           ))
         ) : (
-          <div
-            style={{
-              gridColumn: "span 2",
-              display: "flex",
-              justifyContent: "center",
-              margin: "auto",
-              height: "100vh",
-              width: "160vh",
-            }}
-          >
+          <Col xs={12} className="text-center">
             <Loader />
-          </div>
+          </Col>
         )}
-      </div>
+      </Row>
 
       <Modal show={showModal} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -292,6 +258,7 @@ const Notes = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
       {viewnote && <ViewNote note={allNotes} onClose={handleCancel} />}
     </div>
   );
